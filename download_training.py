@@ -81,7 +81,8 @@ class AirLabDownloader(object):
             print('--')
             if isfile(target_file_name):
                 print_error('Error: Target file {} already exists..'.format(target_file_name))
-                return False, None
+                # return False, None
+                continue
 
             print(f"  Downloading {source_file_name} from {self.bucket_name}...")
             self.client.fget_object(self.bucket_name, source_file_name, target_file_name)
@@ -122,7 +123,7 @@ class CloudFlareDownloader(object):
             print('--')
             if isfile(target_file_name):
                 print_error('Error: Target file {} already exists..'.format(target_file_name))
-                return False, None
+                continue
             try:
                 print(f"  Downloading {source_file_name} from {self.bucket_name}...")
                 source_file_name = join('tartanair', source_file_name) # hard code that the cloudflare has a specific prefix folder
@@ -256,7 +257,7 @@ if __name__ == '__main__':
 
     # download_from_cloudflare_r2(s3, downloadlist, outdir, bucket_name)
     res, downloadfilelist = downloader.download(downloadlist, outdir)
-
+    # breakpoint()
     if args.unzip:
         unzip_files(downloadfilelist, outdir)
     # for fileurl in downloadlist:
