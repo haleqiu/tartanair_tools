@@ -1,4 +1,4 @@
-from os import system, mkdir
+from os import system, mkdir, path
 import argparse
 from os.path import isdir, isfile, join
 from colorama import Fore, Style
@@ -163,10 +163,12 @@ def unzip_files(zipfilelist, target_dir):
     for zipfile in zipfilelist:
         if not isfile(zipfile) or (not zipfile.endswith('.zip')):
             print_error("The zip file is missing {}".format(zipfile))
-            return False
+            continue
         print('  Unzipping {} ...'.format(zipfile))
         cmd = 'unzip -q -o ' + zipfile + ' -d ' + target_dir
         system(cmd)
+        deletcmd = 'rm ' + zipfile
+        system(deletcmd)
     print_highlight("Unzipping Completed! ")
 
 if __name__ == '__main__':
@@ -256,9 +258,11 @@ if __name__ == '__main__':
     print_highlight('*** Total Size: {} GB ***'.format(all_size))
 
     # download_from_cloudflare_r2(s3, downloadlist, outdir, bucket_name)
-    res, downloadfilelist = downloader.download(downloadlist, outdir)
+    # res, downloadfilelist = downloader.download(downloadlist, outdir)
     # breakpoint()
     if args.unzip:
+        downloadfilelist = [join(outdir, f.replace('/', '_')) for f in downloadlist]
+        print(downloadfilelist)
         unzip_files(downloadfilelist, outdir)
     # for fileurl in downloadlist:
     #     zf = fileurl.split('/')
